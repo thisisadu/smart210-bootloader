@@ -1,7 +1,7 @@
 .global _start
 
 _start:
-	ldr pc, =main				
+	ldr pc, =main
 
 halt:
 	b halt

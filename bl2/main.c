@@ -11,6 +11,10 @@ void delay(unsigned long count)
 
 void main()				//LED …¡À∏
 {
+  uart_init();
+
+  printf("i am ok now\n");
+
 	GPJ2CON = 0x00001111;		// ≈‰÷√“˝Ω≈
 	while(1)					// …¡À∏
 	{

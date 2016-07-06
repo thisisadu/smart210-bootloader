@@ -1,12 +1,9 @@
 all:
-	make -C ./BL1
-	make -C ./BL2
-	mv BL1/BL1.bin .
-	mv BL2/BL2.bin .
+	make -C ./bl1
+	make -C ./bl2
 burn:
-	sudo dd if=BL1.bin of=/dev/mmcblk0 bs=512 seek=1
-	sudo dd if=BL2.bin of=/dev/mmcblk0 bs=512 seek=49
+	sudo dd if=./bl1/bl1.bin of=/dev/mmcblk0 bs=512 seek=1
+	sudo dd if=./bl2/bl2.bin of=/dev/mmcblk0 bs=512 seek=49
 clean:
-	make clean -C ./BL1
-	make clean -C ./BL2
-	rm *.bin
+	make clean -C ./bl1
+	make clean -C ./bl2

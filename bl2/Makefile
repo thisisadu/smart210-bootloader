@@ -1,8 +1,11 @@
-BL2.bin: start.o main.o
-	arm-linux-gnueabi-ld -Tsdram.lds -o BL2.elf $^
-	arm-linux-gnueabi-objcopy -O binary BL2.elf BL2.bin
-	arm-linux-gnueabi-objdump -D BL2.elf > BL2_elf.dis
-	
+bl2.bin: start.o main.o uart.o lib/libc.a
+	arm-linux-gnueabi-ld -Tbl2.lds -o bl2.elf $^
+	arm-linux-gnueabi-objcopy -O binary bl2.elf bl2.bin
+
+.PHONY : lib/libc.a
+lib/libc.a:
+	cd lib; make; cd ..
+
 %.o : %.S
 	arm-linux-gnueabi-gcc -o $@ $< -c  
 
@@ -10,4 +13,5 @@ BL2.bin: start.o main.o
 	arm-linux-gnueabi-gcc -o $@ $< -c   
 
 clean:
-	rm *.o *.elf *.bin *.dis -f
+	rm *.o *.elf *.bin -f
+	cd lib; make clean; cd ..

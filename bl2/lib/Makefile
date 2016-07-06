@@ -7,7 +7,7 @@ INCLUDEDIR      := $(shell pwd)/../include
 CFLAGS          := -Wall -O2 -fno-builtin
 CPPFLAGS        := -nostdinc -I$(INCLUDEDIR)
 
-objs := div64.o lib1funcs.o ctype.o muldi3.o printf.o string.o vsprintf.o
+objs := div64.o lib1funcs.o ctype.o muldi3.o printf.o string.o vsprintf.o stdio.o
 
 libc.a: $(objs)
 	${AR} -r -o $@ $^
