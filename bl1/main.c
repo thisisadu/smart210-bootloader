@@ -8,7 +8,7 @@ void copy_code_to_dram(void)
 	copy_sd_mmc_to_mem copy_bl2 = (copy_sd_mmc_to_mem) (*(unsigned int *) (0xD0037F98));
 
 
-  copy_bl2(0, 49, 32,(unsigned int *)0x23E00000, 0);
+  copy_bl2(0, 49, 64,(unsigned int *)0x23E00000, 0);
 
 	// Ìø×ªµ½DRAM
   BL2 = (void *)0x23E00000;
