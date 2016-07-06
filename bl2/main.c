@@ -32,17 +32,17 @@ void main(void)
 
   led_loop();
 
-  //copy zImage to dram
-  copy_fun(0, 49, 64,(unsigned int *)0x23E00000, 0);
-
   //copy dtb to dram
-  copy_fun(0, 49, 64,(unsigned int *)0x23E00000, 0);
+  copy_fun(0, 200, 100,(unsigned int *)0x4000000, 0);
+
+  //copy zImage to dram
+  copy_fun(0, 400, 5000,(unsigned int *)0x2000000, 0);
 
   //prepare args before jump to kernel
   prepare();
 
 	//jump to kernel
 	void (*kernel)(void);
-  kernel = (void *)0x23E00000;
+  kernel = (void *)0x2000000;
   (*kernel)();
 }
