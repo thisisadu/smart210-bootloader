@@ -28,21 +28,24 @@ void main(void)
 
   uart_init();
 
-  printf("i am ok now\n");
+  printf("load dtb\n");
 
-  led_loop();
+//  led_loop();
 
   //copy dtb to dram
-  copy_fun(0, 200, 100,(unsigned int *)0x4000000, 0);
+  copy_fun(0, 200, 100,(unsigned int *)0x24000000, 0);
 
+  printf("load zImage\n");
   //copy zImage to dram
-  copy_fun(0, 400, 5000,(unsigned int *)0x2000000, 0);
+  copy_fun(0, 400, 5000,(unsigned int *)0x23F00000, 0);
+
+  printf("prepare\n");
 
   //prepare args before jump to kernel
   prepare();
 
 	//jump to kernel
 	void (*kernel)(void);
-  kernel = (void *)0x2000000;
+  kernel = (void *)0x23F00000;
   (*kernel)();
 }
