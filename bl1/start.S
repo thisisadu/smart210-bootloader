@@ -1,22 +1,62 @@
 .global _start
 
 _start:
-	// 关闭看门狗
-	ldr	r0, =0xE2700000			
-	mov	r1, #0
-	str	r1, [r0]
+	bl set_svc
 
-	// 设置栈，以便调用c函数
+	bl disable_watchdog
+
+	bl disable_interrupt
+
+	bl disable_mmu
+
+	// \C9\E8\D6\C3栈\A3\AC\D2员\E3\B5\F7\D3\C3c\BA\AF\CA\FD
 	ldr	sp, =0xD0037D80
 
-	// 初始化时钟
+	// \B3\F5始\BB\AF时\D6\D3
 	bl clock_init	
 				
-	// 初始化内存
+	// \B3\F5始\BB\AF\C4诖\E6
 	bl mem_init						
 
-	// 重定位，并跳到DRAM中运行				
+	// \D6囟\A8位\A3\AC\B2\A2\CC\F8\B5\BDDRAM\D6\D0\D4\CB\D0\D0				
 	bl copy_code_to_dram
 
+set_svc:
+	mrs r0,cpsr
+	bic r0,r0,#0xff				
+	orr r0,r0,#0xd3						@\BF\BFirq,fiq,\BF\BF\BFsvc\BF\BF
+	msr cpsr_c,r0
+	mov pc,lr
+
+#define  pwtcon 0xe2700000	
+disable_watchdog:					  @\BF\BF\BF\BF\BF
+	ldr r0,=pwtcon
+	mov r1,#0x0
+	str r1,[r0]
+	mov pc,lr
+	
+disable_interrupt:					@\BF\BF\BF\BF
+	mvn r0,#0x0             
+	ldr r1,=0xf2000014
+	str r0,[r1]
+	
+	ldr r1,=0xf2100014
+	str r0,[r1]
+	
+	ldr r1,=0xf2200014
+	str r0,[r1]
+	
+	ldr r1,=0xf2300014
+	str r0,[r1]
+	mov pc,lr
+
+disable_mmu:
+	mcr p15,0,r0,c7,c5,0
+	mcr p15,0,r0,c7,c6,1
+	mrc p15,0,r0,c1,c0,0					@\BF\BFMMU\BF\BF\BFdcache(Icache\BF\BF\BF\BF)
+	bic r0, r0, #0x00000007
+	mcr p15,0,r0,c1,c0,0
+	mov pc, lr
+	
 halt:
 	b halt
