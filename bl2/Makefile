@@ -1,4 +1,4 @@
-bl2.bin: start.o main.o uart.o lib/libc.a
+bl2.bin: start.o main.o uart.o Hsmmc.o lib/libc.a
 	arm-linux-gnueabi-ld -Tbl2.lds -o bl2.elf $^
 	arm-linux-gnueabi-objcopy -O binary bl2.elf bl2.bin
 

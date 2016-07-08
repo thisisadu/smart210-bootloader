@@ -20,6 +20,73 @@
 static uint8_t CardType; // ¿¨ÀàÐÍ
 static uint32_t RCA; // ¿¨Ïà¶ÔµØÖ·
 
+void Delay_us(uint32_t Count)
+{
+
+	//¿¿1us,¿¿¿nCount us
+
+	// ¿icache, cpu clock 1G, ¿¿¿¿¿
+
+	int32_t temp1 = 59;// Arm clock¿1G,¿¿¿¿¿17¿Arm clock
+
+	int32_t temp2 = 0;
+
+	asm volatile (
+
+		"Delay_us_0:\n"
+
+		"mov  %0, %2\n"  
+
+		"Delay_us_1:\n"
+
+		"subs  %0, %0, #1\n" // ¿¿¿ cycle 1
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 1
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 2 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 3 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 4 	
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 5 	
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 6 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 7 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 8 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 9 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 10 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 11 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 12 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 13 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 14 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 15 
+
+		"mov %1, %1\n"	// ¿¿¿ cycle 16 
+
+		"mov %0, %0\n"	// ¿¿¿ cycle 16 
+
+		"bne Delay_us_1\n" // ¿¿¿¿¿¿¿¿¿ ,cycle 17 
+
+		"subs  %1, %1, #1\n"   // ¿¿¿¿¿nCount¿¿0
+
+		"bne Delay_us_0\n" 
+
+		: "+r"(temp2), "+r"(Count): "r"(temp1): "cc" 
+
+	);	
+
+}
+
 static void Hsmmc_ClockOn(uint8_t On)
 {
 	uint32_t Timeout;
