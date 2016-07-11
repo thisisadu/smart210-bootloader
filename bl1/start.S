@@ -9,6 +9,10 @@ _start:
 
 	bl disable_mmu
 
+	bl disable_dcache
+
+	bl invalid_tlb
+
 	// \C9\E8\D6\C3ջ\A3\AC\D2Ա\E3\B5\F7\D3\C3c\BA\AF\CA\FD
 	ldr	sp, =0xD0037D80
 
@@ -51,12 +55,28 @@ disable_interrupt:					@\BF\BF\BF\BF
 	mov pc,lr
 
 disable_mmu:
-	mcr p15,0,r0,c7,c5,0
-	mcr p15,0,r0,c7,c6,1
 	mrc p15,0,r0,c1,c0,0					@\BF\BFMMU\BF\BF\BFdcache(Icache\BF\BF\BF\BF)
-	bic r0, r0, #0x00000007
+	bic r0, r0, #0x1
 	mcr p15,0,r0,c1,c0,0
 	mov pc, lr
 	
+disable_dcache:
+	mrc p15,0,r0,c1,c0,0					@\BF\BFMMU\BF\BF\BFdcache(Icache\BF\BF\BF\BF)
+	bic r0, r0, #(1<<2)
+	mcr p15,0,r0,c1,c0,0
+	mov pc, lr
+
+disable_icache:
+	mrc p15,0,r0,c1,c0,0					@\BF\BFMMU\BF\BF\BFdcache(Icache\BF\BF\BF\BF)
+	bic r0, r0, #(1<<12)
+	mcr p15,0,r0,c1,c0,0
+	mov pc, lr
+
+invalid_tlb:
+	mov r0, #0
+	mcr p15,0,r0,c8,c7,0
+	mov pc, lr
+
+
 halt:
 	b halt
